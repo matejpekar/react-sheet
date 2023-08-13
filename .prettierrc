@@ -1,0 +1,10 @@
+{
+  "semi": false,
+  "quoteProps": "consistent",
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "useTabs": false,
+  "importOrderSeparation": false,
+  "importOrderSortSpecifiers": true
+}
