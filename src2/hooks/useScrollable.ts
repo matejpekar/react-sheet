@@ -1,8 +1,11 @@
-import { useCallback, useRef } from 'react'
-import { defaultBottomOverDragCallback, defaultTopOverDragCallback } from '../utils'
-import { useSnapPoints } from './useSnapPoints'
 import { AnimationPlaybackControls, useMotionValue } from 'framer-motion'
+import { useCallback, useRef } from 'react'
+import {
+  defaultBottomOverDragCallback,
+  defaultTopOverDragCallback,
+} from '../utils'
 import { useSheet } from './useSheet'
+import { useSnapPoints } from './useSnapPoints'
 
 export const useScrollable = (enableTopOverdrag: boolean) => {
   const { height, snapToIndex } = useSheet()
@@ -22,24 +25,30 @@ export const useScrollable = (enableTopOverdrag: boolean) => {
       const draggedHeight = startHeight.get()! - delta
       if (draggedHeight > highestSnapPoint) {
         if (enableTopOverdrag) {
-          height.set(highestSnapPoint + defaultTopOverDragCallback(draggedHeight - highestSnapPoint))
+          height.set(
+            highestSnapPoint +
+              defaultTopOverDragCallback(draggedHeight - highestSnapPoint)
+          )
         } else {
           height.set(highestSnapPoint)
         }
       } else if (draggedHeight < lowestSnapPoint) {
-        height.set(lowestSnapPoint - defaultBottomOverDragCallback(lowestSnapPoint - draggedHeight))
+        height.set(
+          lowestSnapPoint -
+            defaultBottomOverDragCallback(lowestSnapPoint - draggedHeight)
+        )
       } else {
         height.set(draggedHeight)
       }
     },
-    [height, startHeight, highestSnapPoint, lowestSnapPoint, enableTopOverdrag],
+    [height, startHeight, highestSnapPoint, lowestSnapPoint, enableTopOverdrag]
   )
 
   const onPanEnd = useCallback(
     (velocityY: number) => {
       const target = height.get() - velocityY / 10
       const toValue = snapPoints.reduce((prev, curr) =>
-        Math.abs(curr - target) < Math.abs(prev - target) ? curr : prev,
+        Math.abs(curr - target) < Math.abs(prev - target) ? curr : prev
       )
 
       startHeight.set(null, false)
@@ -48,7 +57,7 @@ export const useScrollable = (enableTopOverdrag: boolean) => {
         interruptible: true,
       })
     },
-    [height, startHeight, snapPoints, snapToIndex],
+    [height, startHeight, snapPoints, snapToIndex]
   )
 
   return {

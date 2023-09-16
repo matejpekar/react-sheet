@@ -1,8 +1,8 @@
 import react from '@vitejs/plugin-react'
 import path from 'node:path'
-import { defineConfig } from 'vitest/config'
+import type { UserConfigExport } from 'vite'
 import dts from 'vite-plugin-dts'
-import { UserConfigExport } from 'vite'
+import { defineConfig } from 'vitest/config'
 import { name } from './package.json'
 
 const app = async (): Promise<UserConfigExport> => {
@@ -24,7 +24,7 @@ const app = async (): Promise<UserConfigExport> => {
         external: ['react', 'react/jsx-runtime', 'react-dom'],
         output: {
           globals: {
-            react: 'React',
+            'react': 'React',
             'react/jsx-runtime': 'react/jsx-runtime',
             'react-dom': 'ReactDOM',
           },

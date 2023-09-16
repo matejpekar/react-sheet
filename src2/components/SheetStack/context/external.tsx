@@ -7,7 +7,7 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { SheetStackVariables, SheetStackMethods, SheetItem } from '../types'
+import { SheetItem, SheetStackMethods, SheetStackVariables } from '../types'
 
 export const SheetStackContext = createContext<
   (SheetStackVariables & SheetStackMethods) | null

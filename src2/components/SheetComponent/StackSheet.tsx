@@ -1,15 +1,15 @@
-import { memo, useEffect, useMemo, useRef, useState } from 'react'
-import { SheetProps } from '../../types'
 import {
   motion,
   useIsPresent,
   useMotionValue,
   useTransform,
 } from 'framer-motion'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { useScrollable, useSheet, useSnapPoints } from '../../hooks'
-import { SheetInternalProvider } from '../../context'
 import { defaultSnapAnimationConfig } from '../../constants'
+import { SheetInternalProvider } from '../../context'
+import { useScrollable, useSheet, useSnapPoints } from '../../hooks'
+import { SheetProps } from '../../types'
 import { useSheetStackInternal } from '../SheetStack/hooks'
 
 const StackSheet = ({

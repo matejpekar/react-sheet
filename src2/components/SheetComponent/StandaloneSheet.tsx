@@ -1,5 +1,3 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { SheetProps } from '../../types'
 import {
   AnimationPlaybackControls,
   animate,
@@ -7,17 +5,22 @@ import {
   useMotionValue,
   useTransform,
 } from 'framer-motion'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { defaultSnapAnimationConfig } from '../../constants'
+import { SheetInternalProvider, SheetProvider } from '../../context'
+import { SheetProps } from '../../types'
 import {
   defaultBottomOverDragCallback,
   defaultTopOverDragCallback,
 } from '../../utils'
-import { SheetInternalProvider, SheetProvider } from '../../context'
 
 const StandaloneSheet = ({
   initialIndex,
   snapPoints,
+
+  borderRadius,
+  boxShadow,
 
   initialAnimation = true,
   snapAnimationConfig = defaultSnapAnimationConfig,
@@ -29,6 +32,7 @@ const StandaloneSheet = ({
   children,
 }: SheetProps) => {
   const ref = useRef<HTMLDivElement>(null)
+  const y = useMotionValue(0)
   const height = useMotionValue(initialAnimation ? 0 : snapPoints[initialIndex])
   const snapIndex = useMotionValue(initialIndex)
 
@@ -63,50 +67,22 @@ const StandaloneSheet = ({
     (index: number, options?: { animated?: boolean }) => {
       snapIndex.set(index)
 
+      const target = highestSnapPoint - snapPoints[index]
+      console.log(target)
       if (options?.animated) {
-        return animate(height, snapPoints[index], snapAnimationConfig)
+        return animate(y, target, {
+          velocity: -y.getVelocity(),
+          ...snapAnimationConfig,
+        })
       }
-      height.set(snapPoints[index])
+      y.set(target)
     },
     [height, snapIndex, snapPoints, snapAnimationConfig]
   )
 
-  const onPan = useCallback(
-    (delta: number) => {
-      animationRef.current?.stop()
-      const latest = draggedHeight.get() - delta
-      draggedHeight.set(latest)
-
-      if (latest > highestSnapPoint) {
-        if (enableTopOverdrag) {
-          height.set(
-            highestSnapPoint + topOverdragCallback(latest - highestSnapPoint)
-          )
-        } else {
-          height.set(highestSnapPoint)
-        }
-      } else if (latest < lowestSnapPoint) {
-        height.set(
-          lowestSnapPoint - bottomOverdragCallback(lowestSnapPoint - latest)
-        )
-      } else {
-        height.set(latest)
-      }
-    },
-    [
-      height,
-      draggedHeight,
-      lowestSnapPoint,
-      highestSnapPoint,
-      enableTopOverdrag,
-      topOverdragCallback,
-      bottomOverdragCallback,
-    ]
-  )
-
-  const onPanEnd = useCallback(
+  const onDragEnd = useCallback(
     (velocityY: number) => {
-      const target = height.get() - velocityY / 10
+      const target = highestSnapPoint - y.get() - velocityY / 10
       const toValue = snapPoints.reduce((prev, curr) =>
         Math.abs(curr - target) < Math.abs(prev - target) ? curr : prev
       )
@@ -141,10 +117,11 @@ const StandaloneSheet = ({
 
   const internalContextVariables = useMemo(
     () => ({
+      y,
       draggedHeight,
       setEnableTopOverdrag,
     }),
-    [draggedHeight, setEnableTopOverdrag]
+    [y, draggedHeight, setEnableTopOverdrag]
   )
 
   return (
@@ -152,19 +129,21 @@ const StandaloneSheet = ({
       <SheetInternalProvider value={internalContextVariables}>
         <Container
           ref={ref}
-          layout="size"
-          layoutDependency={height}
-          onPointerDown={() => draggedHeight.set(height.get())}
-          onPan={(_, { delta }) => onPan(delta.y)}
-          onPanEnd={(_, { velocity }) => onPanEnd(velocity.y)}
-          exit={{ height: 0 }}
-          transition={snapAnimationConfig}
-          animate={{ height: snapPoints[initialIndex] }}
-          style={{
-            height,
-            borderTopLeftRadius: 10, // has to be here
-            borderTopRightRadius: 10, // has to be here
+          drag="y"
+          dragMomentum={false}
+          dragConstraints={{
+            top: 0,
+            bottom: highestSnapPoint - lowestSnapPoint,
           }}
+          dragElastic={{
+            top: 0.08,
+            bottom: 0.3,
+          }}
+          onDragEnd={(_, { velocity }) => onDragEnd(velocity.y)}
+          // exit={{ height: 0 }}
+          transition={snapAnimationConfig}
+          // animate={{ height: snapPoints[initialIndex] }}
+          style={{ y, height: highestSnapPoint, borderRadius, boxShadow }}
         >
           {children}
         </Container>

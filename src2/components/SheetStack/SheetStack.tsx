@@ -1,9 +1,9 @@
-import { useState, useMemo, useCallback, useRef, cloneElement } from 'react'
-import { SheetStackInternalProvider } from './context'
 import { AnimatePresence } from 'framer-motion'
-import { SheetStackProps } from './types'
+import { cloneElement, useCallback, useMemo, useRef, useState } from 'react'
 import { SheetProvider } from '../../context'
+import { SheetStackInternalProvider } from './context'
 import { useSheetStack } from './hooks'
+import { SheetStackProps } from './types'
 
 const SheetStack = ({ children }: SheetStackProps) => {
   const [snaps, setSnaps] = useState<number[]>([])

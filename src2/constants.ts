@@ -1,11 +1,14 @@
 import type { ValueAnimationTransition } from 'framer-motion'
 
-export const DEFAULT_INITIAL_ANIMATION = true
+/**
+ * Scroll offset threshold for the sheet collapse
+ */
+export const scrollTreshold = -20 as const
 
 /**
  * Config for the sheet snap animation after drag ends
  */
-export const DEFAULT_SNAP_ANIMATION_CONFIG: ValueAnimationTransition<number> = {
+export const defaultSnapAnimationConfig: ValueAnimationTransition<number> = {
   type: 'spring',
   damping: 40,
   stiffness: 500,

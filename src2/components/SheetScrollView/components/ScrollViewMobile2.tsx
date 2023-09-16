@@ -1,4 +1,3 @@
-import { memo, useRef, useState, forwardRef, useMemo } from 'react'
 import {
   AnimationPlaybackControls,
   animate,
@@ -6,12 +5,13 @@ import {
   useMotionValueEvent,
   useScroll,
 } from 'framer-motion'
-import styled from 'styled-components'
-import { useSheet, useSheetInternal } from '../../../hooks'
-import { SheetScrollViewProps } from '../types'
-import { SheetScrollViewInternalProvider } from '../context'
+import { forwardRef, memo, useMemo, useRef, useState } from 'react'
 import { mergeRefs } from 'react-merge-refs'
+import styled from 'styled-components'
 import { scrollTreshold } from '../../../constants'
+import { useSheet, useSheetInternal } from '../../../hooks'
+import { SheetScrollViewInternalProvider } from '../context'
+import { SheetScrollViewProps } from '../types'
 
 const ScrollViewMobile = forwardRef<HTMLDivElement, SheetScrollViewProps>(
   ({ children }, ref) => {

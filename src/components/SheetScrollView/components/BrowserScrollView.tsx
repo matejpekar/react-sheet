@@ -1,10 +1,10 @@
-import React, { forwardRef, memo, useMemo } from 'react'
 import { motion } from 'framer-motion'
+import { forwardRef, memo, useMemo } from 'react'
 import styled from 'styled-components'
-import { SheetScrollViewProps } from '../types'
 import { SheetScrollViewInternalProvider } from '../context'
+import { SheetScrollViewProps } from '../types'
 
-const ScrollViewBrowser = forwardRef<HTMLDivElement, SheetScrollViewProps>(
+const BrowserScrollView = forwardRef<HTMLDivElement, SheetScrollViewProps>(
   ({ children }, ref) => {
     const contextVariables = useMemo(() => ({ scrollEnabled: true }), [])
 
@@ -18,11 +18,12 @@ const ScrollViewBrowser = forwardRef<HTMLDivElement, SheetScrollViewProps>(
   }
 )
 
-ScrollViewBrowser.displayName = 'ScrollViewBrowser'
-export default memo(ScrollViewBrowser)
+BrowserScrollView.displayName = 'BrowserScrollView'
+export default memo(BrowserScrollView)
 
 const ScrollableView = styled(motion.div)`
-  overflow: auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
   overscroll-behavior: contain;
   width: 100%;
   height: 100%;

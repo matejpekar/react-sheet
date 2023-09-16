@@ -1,31 +1,19 @@
-import type { MotionValue, ValueAnimationTransition } from 'framer-motion'
-import type { CSSProperties, Context, ReactNode } from 'react'
-
-export type SheetType = 'translating' | 'resizing'
+import type { MotionValue } from 'framer-motion'
+import type { ReactNode } from 'react'
 
 export interface SheetProps {
   initialIndex: number
   snapPoints: number[]
-  type: SheetType
 
-  context?: Context<{ height: MotionValue<number> }>
   initialAnimation?: boolean
   children?: ReactNode
 
   boxShadow?: string
   borderRadius?: string
-  style?: CSSProperties
-  className?: string
 
   snapAnimationConfig?: ValueAnimationTransition<number>
 
   onClose?: () => void
-
-  getNextSnapIndex?: (
-    snapPoints: number[],
-    height: number,
-    velocity: number
-  ) => number
 
   /**
    * Calculates the top over drag
@@ -52,7 +40,12 @@ export interface SheetMethods {
    *  - `animated` whether to animate the transition or not.
    *  - `interruptible` whether can be interrupted or not.
    */
-  snapToIndex: (index: number, options?: { animated?: boolean }) => void
+  snapToIndex: (
+    index: number,
+    options?: {
+      animated?: boolean
+    }
+  ) => AnimationPlaybackControls | undefined
 }
 
 export interface SheetVariables {
@@ -72,4 +65,7 @@ export interface SheetVariables {
    * Current snap point index.
    */
   snapIndex: MotionValue<number>
+
+  lowestSnapPoint: number
+  highestSnapPoint: number
 }
